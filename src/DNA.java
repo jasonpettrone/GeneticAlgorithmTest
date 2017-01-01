@@ -2,25 +2,25 @@ import java.util.Random;
 
 public class DNA {
 	
-	char[] genes;	//Genes this DNA will have
-	double fitness;	//Fitness of this particular set of genes
+	private char[] genes;	//Genes this DNA will have
+	private int fitness;	//Fitness of this particular set of genes
+	
+	static Random r = new Random();
+	static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 	
 	
 	//Constructor - initializes with a set of genes
-	public DNA(String genes){
+	public DNA(char[] genes){
 		
-		this.genes = genes.toCharArray();
+		this.genes = genes;
 	}
 	
 	//Constructor - will generate a random set of genes with a given length
 	public DNA(int length){
 		
-		Random r = new Random();
-		String s = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
-		
 		String result = "";
 		for(int i = 0; i<length; i++)
-			result += s.charAt(r.nextInt(s.length()));
+			result += alphabet.charAt(r.nextInt(alphabet.length()));
 		
 		genes = result.toCharArray();
 	}
@@ -37,20 +37,45 @@ public class DNA {
 		this.genes = genes;
 	}
 	
-	//Crossover method - Mates two parents to create a child
-	public static char[] crossover(DNA parent1, DNA parent2){
+	//Reproduction method - Mates two parents to create a child, returns child
+	//The child's genes are produced by alternating between the two parents genes 
+	public static DNA reproduce(DNA parent1, DNA parent2, double mutationRate){
 		
-		char[] child = parent1.getGenes();
+		DNA child;
+		char[] parent1Genes = parent1.getGenes();
+		char[] parent2Genes = parent2.getGenes();
+		char[] childGenes = new char[parent1Genes.length];
 		
-		//Do crossover
+		//Alternate between the two parents to produce the child
+		for(int i = 0; i<parent1Genes.length; i++){
+			if(i%2==0)
+				childGenes[i] = parent1Genes[i];
+			else
+				childGenes[i] = parent2Genes[i];
+		}
 		
+		//Chance a mutation on the child
+		//We mutate the child by giving it a new random character in a random location
+		if(Math.random() < mutationRate)
+			childGenes[r.nextInt(childGenes.length)] = alphabet.charAt(r.nextInt(alphabet.length()));
+			
+		
+		child  = new DNA(childGenes);
 		return child;
 	}
 	
 	//Fitness function - returns the fitness of this set of genes
-	public double getFitness(){
+	//The fitness in this case is determined by how many characters match the target phrase
+	public int fitness(char[] target){
 		
-		return 1.0;
+		int fitness = 0;
+		
+		for(int i = 0; i < target.length; i++)
+			if(target[i] == genes[i])
+				fitness++;
+		
+		this.fitness = fitness;
+		return fitness;
 	}
 	
 	//toString method for easy printing
