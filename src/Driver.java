@@ -3,13 +3,28 @@ public class Driver {
 	
 	public static void main(String[] args){
 		
-		String target = "Fat eggs";
-		DNA parent1 = new DNA(10);
-		DNA parent2 = new DNA(10);
+		String target = "Jason is cool";
 		
-		System.out.println(parent1 + " " + parent1.fitness(target.toCharArray()));
-		System.out.println(parent2 + " " + parent2.fitness(target.toCharArray()));
+		Population pop = new Population(200, .05, target.toCharArray());
+		pop.createInitialPop();
+		int generations = 10000;
 		
-		System.out.println(DNA.reproduce(parent1, parent2, 1));
+		for(int i = 0; i < generations; i++){
+			
+			pop.createNewGeneration();
+			
+			if(i % 1 == 0){
+				System.out.println(pop.getFittestMember() + " " + pop.getFittestMember().fitness(target.toCharArray()));
+				if(pop.getFittestMember().toString().equals(target)){
+					System.out.println("'" + target + "'" + " was found on generation " + i);
+					break;
+				}
+			}
+			
+		}
+		
+		
+		
+		
 	}
 }

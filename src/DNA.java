@@ -5,8 +5,8 @@ public class DNA {
 	private char[] genes;	//Genes this DNA will have
 	private int fitness;	//Fitness of this particular set of genes
 	
-	static Random r = new Random();
-	static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+	private static Random r = new Random();
+	private static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz ";
 	
 	
 	//Constructor - initializes with a set of genes
@@ -71,7 +71,7 @@ public class DNA {
 		int fitness = 0;
 		
 		for(int i = 0; i < target.length; i++)
-			if(target[i] == genes[i])
+			if(genes[i] == target[i])
 				fitness++;
 		
 		this.fitness = fitness;
