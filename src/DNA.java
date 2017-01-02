@@ -1,9 +1,10 @@
+import java.util.Comparator;
 import java.util.Random;
 
-public class DNA {
+public class DNA implements Comparator<DNA>{
 	
 	private char[] genes;	//Genes this DNA will have
-	private int fitness;	//Fitness of this particular set of genes
+	public int fitness;		//Fitness of this particular set of genes
 	
 	private static Random r = new Random();
 	private static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz ";
@@ -12,6 +13,7 @@ public class DNA {
 	//Constructor - initializes with a set of genes
 	public DNA(char[] genes){
 		
+		fitness = -1;
 		this.genes = genes;
 	}
 	
@@ -86,4 +88,17 @@ public class DNA {
 			answer += genes[i];
 		return answer;
 	}
+	
+	@Override
+	public int compare(DNA o1, DNA o2) {
+		
+		if(o1.fitness > o2.fitness)
+			return -1;
+		else if(o1.fitness < o2.fitness)
+			return 1;
+		else
+			return 0;
+		
+	}
+
 }

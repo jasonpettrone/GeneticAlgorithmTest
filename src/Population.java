@@ -1,14 +1,18 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public class Population {
 	
-	private DNA[] population;
+	private ArrayList<DNA> population;
+	private PriorityQueue<DNA> heapPopulation;
 	private double mutationRate;
 	private int size;
 	private char[] target;
 	private static Random r = new Random();
+	Comparator<DNA> comparator = new DNA(0);
 	
 	//Constructor to initialize a population of size n, a mutation rate, and a target
 	public Population(int n, double rate, char[] target){
@@ -16,66 +20,70 @@ public class Population {
 		size = n;
 		mutationRate = rate;
 		this.target = target;
-		population = new DNA[size];
+		
+		heapPopulation = new PriorityQueue<DNA>(comparator);
+		population = new ArrayList<DNA>();
 	}
 	
 	//Creates our initial random population
 	public void createInitialPop(){
 		
-		for(int i = 0; i < population.length; i++)
-			population[i] = new DNA(target.length);	
+		for(int i = 0; i < size; i++){
+			population.add(new DNA(target.length));
+			population.get(i).fitness(target);
+			heapPopulation.add(population.get(i));
+		}
+		
 	}
 	
 	//Survival of the fittest. Chooses what parents will create the next generation.
+	//The parents are chosen off the top of a heap, so the two strongest parents will create the next generation
 	public DNA[] selection(){
 		
-		ArrayList<DNA> genePool = new ArrayList<DNA>();
 		DNA[] parents = new DNA[2];
 		
-		//Evaluate fitness of each element
-		for(int i = 0; i < population.length; i++){
-			int fitness = population[i].fitness(target);
-			for(int j = 0; j<fitness; j++)
-				genePool.add(population[i]);
-		}
+		parents[0] = heapPopulation.poll();
 		
-		parents[0] = genePool.get(r.nextInt(genePool.size()));
-		parents[1] = genePool.get(r.nextInt(genePool.size()));
+		if(parents[0].toString().equals(heapPopulation.peek().toString()) == false)
+			parents[1] = heapPopulation.poll();
+		else{
+			while(parents[0].toString().equals(heapPopulation.peek().toString())){
+				if(heapPopulation.size() == 1)
+					break;
+				else
+					parents[1] = heapPopulation.poll();
+			}
+		}
 		
 		return parents;
 	}
 	
 	public void createNewGeneration(){
 		
+		ArrayList<DNA> newPop = new ArrayList<DNA>();
+		PriorityQueue<DNA> newHeap = new PriorityQueue<DNA>(comparator);
+
+		DNA[] parents = selection();
+		for(int i = 0; i < population.size() && heapPopulation.size() > 0; i++){
+			DNA child = DNA.reproduce(parents[0], parents[1], mutationRate);
+			newPop.add(child);
+			newPop.get(i).fitness(target);
+			newHeap.add(child);
+		}	
 		
-		for(int i = 0; i < population.length; i++){
-			
-			//Get the parents of the new generation
-			DNA[] parents = selection();
-			
-			//Create children from those parents
-			population[i] = DNA.reproduce(parents[0], parents[1], mutationRate);
-		}
+		heapPopulation = newHeap;
+		population = newPop;
+		
 	}
 	
 	//Gets the fittest member of the current population
 	public DNA getFittestMember(){
 		
-		int fittest = 0;
-		int index = 0;
-		
-		for(int i = 0; i < population.length; i++){
-			if(population[i].fitness(target) > fittest){
-				index = i;
-				fittest = population[i].fitness(target);
-			}
-		}
-		
-		return population[index];
+		return heapPopulation.peek();
 	}
 	
 	public String toString(){
 		
-		return Arrays.toString(population);
+		return population.toString();
 	}
 }
