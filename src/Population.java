@@ -64,7 +64,7 @@ public class Population {
 		PriorityQueue<DNA> newHeap = new PriorityQueue<DNA>(comparator);
 
 		DNA[] parents = selection();
-		for(int i = 0; i < population.size() && heapPopulation.size() > 0; i++){
+		for(int i = 0; i < population.size(); i++){
 			DNA child = DNA.reproduce(parents[0], parents[1], mutationRate);
 			newPop.add(child);
 			newPop.get(i).fitness(target);

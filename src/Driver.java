@@ -3,9 +3,9 @@ public class Driver {
 	
 	public static void main(String[] args){
 		
-		String target = "This Genetic Algorithm was made by Jason Pettrone";	
-		Population pop = new Population(1000, 0.5, target.toCharArray());
-		int generations = 100000;
+		String target = "......................................................................................................................................................";
+		Population pop = new Population(10000, 1, target.toCharArray());
+		int generations = 1000000000;
 		
 	
 		pop.createInitialPop();		
@@ -20,10 +20,6 @@ public class Driver {
 					break;
 				}
 			}
-		}
-		
-		
-		
-		
+		}		
 	}
 }

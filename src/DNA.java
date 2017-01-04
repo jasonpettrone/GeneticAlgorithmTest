@@ -7,7 +7,7 @@ public class DNA implements Comparator<DNA>{
 	public int fitness;		//Fitness of this particular set of genes
 	
 	private static Random r = new Random();
-	private static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz ";
+	private static String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz ,.";
 	
 	
 	//Constructor - initializes with a set of genes
